@@ -151,6 +151,9 @@ def main(args: argparse.Namespace):
     model_obj = MODELS[args.model]
     if hasattr(model_obj, "_make_model"):
         logger.info("Loading model...")
+        logger.info(f"DEBUG: kwargs = {model_obj.model_kwargs}")
+        logger.info(f"DEBUG: model_class = {model_obj.model_kwargs['model_class']}")
+        logger.info(f"DEBUG: model_class = {model_obj.model_kwargs['model_class']}")
         model_cached = model_obj._make_model(
             model_obj.pretrained_model_name_or_path,
             device_map="auto" if torch.cuda.device_count() > 0 else None,

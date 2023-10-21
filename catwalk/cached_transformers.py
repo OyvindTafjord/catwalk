@@ -20,9 +20,6 @@ class TransformerSpec:
     kwargs: Dict[str, Any] = field(default_factory=dict)
 
     def __hash__(self):
-        logger.info(f"DEBUG: class = {self.cls}")
-        logger.info(f"DEBUG: model_name = {self.model_name}")
-        logger.info(f"DEBUG: module = {self.cls.__module__}")
         return hash((
             f"{self.cls.__module__}.{self.cls.__name__}",
             self.model_name,

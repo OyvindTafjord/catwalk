@@ -61,6 +61,7 @@ def main(args: argparse.Namespace):
             hf_name = args.model_path
         if args.model_class:
             model_args['model_class'] = locate(args.model_class)
+            logger.info(f"Found model_class {args.model_class} as {model_args['model_class']}")
             # Assuming tokenizer will be loaded with model, so fail if trying to load it otherwise
             model_args['pretrained_tokenizer_name_or_path'] = 'UnknownTokenizer'
 
@@ -151,9 +152,6 @@ def main(args: argparse.Namespace):
     model_obj = MODELS[args.model]
     if hasattr(model_obj, "_make_model"):
         logger.info("Loading model...")
-        logger.info(f"DEBUG: kwargs = {model_obj.model_kwargs}")
-        logger.info(f"DEBUG: model_class = {model_obj.model_kwargs['model_class']}")
-        logger.info(f"DEBUG: model_class = {model_obj.model_kwargs['model_class']}")
         model_cached = model_obj._make_model(
             model_obj.pretrained_model_name_or_path,
             device_map="auto" if torch.cuda.device_count() > 0 else None,

@@ -388,8 +388,10 @@ def create_mmlu_tasks():
     :return: {task_name: task}
         e.g. {hendrycksTest-abstract_algebra: Task, hendrycksTest-anatomy: Task}
     """
-    return {f"mmlu_{sub}": create_eleuther_mmlu_task(f"hendrycksTest-{sub}") for sub in SUBJECTS}
-
+    res = {f"mmlu_{sub}": create_eleuther_mmlu_task(f"hendrycksTest-{sub}") for sub in SUBJECTS}
+    res2 = {f"mmlu_choiceText_{sub}": create_eleuther_mmlu_task(f"hendrycksTestChoiceText-{sub}") for sub in SUBJECTS}
+    res.update(res2)
+    return res
 
 def create_eleuther_mmlu_task(subject):
     return EleutherMMLUTask(subject, ranked_classification=True).add_metrics(

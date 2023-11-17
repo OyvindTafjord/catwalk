@@ -91,13 +91,15 @@ def create_all_tasks():
     :return: {task_name: task}
         e.g. {hendrycksTest-abstract_algebra: Task, hendrycksTest-anatomy: Task}
     """
-    return {f"hendrycksTest-{sub}": create_task(sub) for sub in SUBJECTS}
+    res = {f"hendrycksTest-{sub}": create_task(sub) for sub in SUBJECTS}
+    res.update({f"hendrycksTestChoiceText-{sub}": create_task(sub, use_choice_labels=False) for sub in SUBJECTS})
+    return res
 
 
-def create_task(subject):
+def create_task(subject, use_choice_labels=True):
     class HendrycksTest(GeneralHendrycksTest):
         def __init__(self):
-            super().__init__(subject)
+            super().__init__(subject, use_choice_labels=use_choice_labels)
 
     return HendrycksTest
 
@@ -107,8 +109,9 @@ class GeneralHendrycksTest(MultipleChoiceTask):
     DATASET_PATH = "cais/mmlu"
     DATASET_NAME = None
 
-    def __init__(self, subject):
+    def __init__(self, subject, use_choice_labels=True):
         self.DATASET_NAME = subject
+        self.use_choice_labels = use_choice_labels
         super().__init__()
 
     def has_training_docs(self):
@@ -163,7 +166,7 @@ class GeneralHendrycksTest(MultipleChoiceTask):
         keys = ["A", "B", "C", "D"]
         return {
             "query": format_example(doc, keys),
-            "choices": keys,
+            "choices": keys if self.use_choice_labels else doc['choices'],
             "gold": doc["answer"],
         }
 
